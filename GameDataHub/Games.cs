@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameDataHub
 {
-    internal class Game
+    internal class Games
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -16,7 +16,7 @@ namespace GameDataHub
         public string imageUrl { get; set; } 
 
         //CONSTRUCTOR
-        public Game()
+        public Games()
         {
             id = string.Empty;
             name = string.Empty;
@@ -25,7 +25,7 @@ namespace GameDataHub
             genre = string.Empty;
             imageUrl = string.Empty;
         }
-        public Game(string id, string name, string developer, string platform, string genre, string imageUel)
+        public Games(string id, string name, string developer, string platform, string genre, string imageUel)
         {
             this.id = id;
             this.name = name;

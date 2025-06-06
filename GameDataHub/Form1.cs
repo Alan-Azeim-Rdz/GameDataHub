@@ -92,7 +92,7 @@ namespace GameDataHub
             {
                 var fila = DataGrideShowData.Rows[e.RowIndex];
 
-                if (fila.Tag is Game juego && !string.IsNullOrEmpty(juego.imageUrl))
+                if (fila.Tag is Games juego && !string.IsNullOrEmpty(juego.imageUrl))
                 {
                     try
                     {
@@ -140,7 +140,7 @@ namespace GameDataHub
                         foreach (DataGridViewRow row in DataGrideShowData.Rows)
                         {
                             if (row.IsNewRow) continue; // Ignorar la fila nueva
-                            var game = row.Tag as Game;
+                            var game = row.Tag as Games;
                             if (game != null)
                             {
                                 csvContent.AppendLine($"\"{game.id}\",\"{game.name}\",\"{game.genre}\",\"{game.developer}\",\"{game.platform}\",\"{game.imageUrl}\"");
@@ -174,7 +174,7 @@ namespace GameDataHub
                                     StringBuilder sb = new StringBuilder();
                                     foreach (DataGridViewRow row in DataGrideShowData.Rows)
                                     {
-                                        if (row.Tag is Game juego)
+                                        if (row.Tag is Games juego)
                                         {
                                             sb.AppendLine($"\"{juego.id}\",\"{juego.name}\",\"{juego.genre}\",\"{juego.developer}\",\"{juego.platform}\",\"{juego.imageUrl}\"");
                                         }
@@ -207,7 +207,7 @@ namespace GameDataHub
                                     var xmlDoc = new XDocument(new XElement("Games"));
                                     foreach (DataGridViewRow row in DataGrideShowData.Rows)
                                     {
-                                        if (row.Tag is Game juego)
+                                        if (row.Tag is Games juego)
                                         {
                                             xmlDoc.Root.Add(new XElement("Game",
                                                 new XElement("id", juego.id),
@@ -247,7 +247,7 @@ namespace GameDataHub
                                     var juegos = new JArray();
                                     foreach (DataGridViewRow row in DataGrideShowData.Rows)
                                     {
-                                        if (row.Tag is Game juego)
+                                        if (row.Tag is Games juego)
                                         {
                                             var juegoJson = new JObject
                                             {
@@ -319,7 +319,7 @@ namespace GameDataHub
                                 foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
                                 {
                                     if (row.IsNewRow) continue; // Ignorar la fila nueva
-                                    var game = row.Tag as Game;
+                                    var game = row.Tag as Games;
                                     if (game != null)
                                     {
                                         csvContent.AppendLine($"{game.id},{game.name},{game.genre},{game.developer},{game.platform},{game.imageUrl}");
@@ -349,7 +349,7 @@ namespace GameDataHub
                                 StringBuilder sb = new StringBuilder();
                                 foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
                                 {
-                                    if (row.Tag is Game juego)
+                                    if (row.Tag is Games juego)
                                     {
                                         sb.AppendLine($"{juego.id},{juego.name},{juego.genre},{juego.developer},{juego.platform},{juego.imageUrl}");
                                     }
@@ -377,7 +377,7 @@ namespace GameDataHub
                                 var xmlDoc = new XDocument(new XElement("Games"));
                                 foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
                                 {
-                                    if (row.Tag is Game juego)
+                                    if (row.Tag is Games juego)
                                     {
                                         xmlDoc.Root.Add(new XElement("Game",
                                             new XElement("id", juego.id),
@@ -412,7 +412,7 @@ namespace GameDataHub
                                 var juegos = new JArray();
                                 foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
                                 {
-                                    if (row.Tag is Game juego)
+                                    if (row.Tag is Games juego)
                                     {
                                         var juegoJson = new JObject
                                         {
@@ -657,9 +657,9 @@ namespace GameDataHub
             }
         }
 
-        private async Task<List<Game>> BuscarJuegosAsync(string nombre)
+        private async Task<List<Games>> BuscarJuegosAsync(string nombre)
         {
-            var juegos = new List<Game>();
+            var juegos = new List<Games>();
 
             using (var client = new HttpClient())
             {
@@ -699,7 +699,7 @@ namespace GameDataHub
                         imageUrl = "https:" + imageUrl.Replace("t_thumb", "t_cover_big");
                     }
 
-                    juegos.Add(new Game
+                    juegos.Add(new Games
                     {
                         id = item["id"]?.ToString(),
                         name = item["name"]?.ToString(),
@@ -753,7 +753,7 @@ namespace GameDataHub
                         int rowIndex = dataGridView.Rows.Add(values.ToArray());
 
                         // Asignar al objeto Game si es necesario
-                        var game = new Game
+                        var game = new Games
                         {
                             id = values[0],
                             name = values[1],
@@ -805,7 +805,7 @@ namespace GameDataHub
                         int rowIndex = dataGridView.Rows.Add(values.ToArray());
 
                         // Si quieres vincular el objeto Game como Tag
-                        var game = new Game
+                        var game = new Games
                         {
                             id = values[0],
                             name = values[1],
@@ -853,7 +853,7 @@ namespace GameDataHub
                 int rowIndex = dataGridView.Rows.Add(values);
 
                 // Si deseas asociar un objeto Game
-                var game = new Game
+                var game = new Games
                 {
                     id = gameElement.Element("id")?.Value,
                     name = gameElement.Element("name")?.Value,
@@ -898,7 +898,7 @@ namespace GameDataHub
                 int rowIndex = dataGridView.Rows.Add(rowData.ToArray());
 
                 // Opción: vincular al objeto Game si aplica
-                var game = new Game
+                var game = new Games
                 {
                     id = item["id"]?.ToString(),
                     name = item["name"]?.ToString(),
