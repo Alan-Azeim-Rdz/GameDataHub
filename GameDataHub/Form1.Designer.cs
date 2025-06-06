@@ -53,13 +53,10 @@
             label7 = new Label();
             TextBoxUser = new TextBox();
             BtnSeend = new Button();
-            TxtFilter = new TextBox();
             label11 = new Label();
             label10 = new Label();
             FomPlotPlatform = new ScottPlot.WinForms.FormsPlot();
             FromPlotGenre = new ScottPlot.WinForms.FormsPlot();
-            label9 = new Label();
-            button2 = new Button();
             label1 = new Label();
             ComBoxTypeExport = new ComboBox();
             BtnExport = new Button();
@@ -309,13 +306,10 @@
             TabPageView.Controls.Add(label7);
             TabPageView.Controls.Add(TextBoxUser);
             TabPageView.Controls.Add(BtnSeend);
-            TabPageView.Controls.Add(TxtFilter);
             TabPageView.Controls.Add(label11);
             TabPageView.Controls.Add(label10);
             TabPageView.Controls.Add(FomPlotPlatform);
             TabPageView.Controls.Add(FromPlotGenre);
-            TabPageView.Controls.Add(label9);
-            TabPageView.Controls.Add(button2);
             TabPageView.Controls.Add(label1);
             TabPageView.Controls.Add(ComBoxTypeExport);
             TabPageView.Controls.Add(BtnExport);
@@ -359,14 +353,6 @@
             BtnSeend.UseVisualStyleBackColor = true;
             BtnSeend.Click += BtnSeend_Click;
             // 
-            // TxtFilter
-            // 
-            TxtFilter.Location = new Point(103, 100);
-            TxtFilter.Name = "TxtFilter";
-            TxtFilter.Size = new Size(180, 23);
-            TxtFilter.TabIndex = 24;
-            TxtFilter.TextChanged += TxtFilter_TextChanged;
-            // 
             // label11
             // 
             label11.AutoSize = true;
@@ -401,24 +387,6 @@
             FromPlotGenre.Name = "FromPlotGenre";
             FromPlotGenre.Size = new Size(679, 193);
             FromPlotGenre.TabIndex = 20;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(16, 103);
-            label9.Name = "label9";
-            label9.Size = new Size(81, 15);
-            label9.TabIndex = 19;
-            label9.Text = "Filtro Nombre";
-            // 
-            // button2
-            // 
-            button2.Location = new Point(310, 94);
-            button2.Name = "button2";
-            button2.Size = new Size(120, 22);
-            button2.TabIndex = 17;
-            button2.Text = "Filtrar";
-            button2.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -668,11 +636,8 @@
         private Label label10;
         private ScottPlot.WinForms.FormsPlot FomPlotPlatform;
         private ScottPlot.WinForms.FormsPlot FromPlotGenre;
-        private Label label9;
-        private Button button2;
         private Button BtnSend;
         private Button BtnReceive;
-        private TextBox TxtFilter;
         private Label label7;
         private TextBox TextBoxUser;
         private Button BtnSeend;
