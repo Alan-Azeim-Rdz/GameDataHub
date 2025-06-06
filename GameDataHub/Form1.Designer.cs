@@ -57,9 +57,6 @@
             label10 = new Label();
             FomPlotPlatform = new ScottPlot.WinForms.FormsPlot();
             FromPlotGenre = new ScottPlot.WinForms.FormsPlot();
-            label1 = new Label();
-            ComBoxTypeExport = new ComboBox();
-            BtnExport = new Button();
             label6 = new Label();
             ComBoxFormat_Ver = new ComboBox();
             DataGrideViewShowData = new DataGridView();
@@ -310,9 +307,6 @@
             TabPageView.Controls.Add(label10);
             TabPageView.Controls.Add(FomPlotPlatform);
             TabPageView.Controls.Add(FromPlotGenre);
-            TabPageView.Controls.Add(label1);
-            TabPageView.Controls.Add(ComBoxTypeExport);
-            TabPageView.Controls.Add(BtnExport);
             TabPageView.Controls.Add(label6);
             TabPageView.Controls.Add(ComBoxFormat_Ver);
             TabPageView.Controls.Add(DataGrideViewShowData);
@@ -338,14 +332,14 @@
             // 
             // TextBoxUser
             // 
-            TextBoxUser.Location = new Point(103, 129);
+            TextBoxUser.Location = new Point(74, 129);
             TextBoxUser.Name = "TextBoxUser";
             TextBoxUser.Size = new Size(180, 23);
             TextBoxUser.TabIndex = 26;
             // 
             // BtnSeend
             // 
-            BtnSeend.Location = new Point(310, 122);
+            BtnSeend.Location = new Point(284, 125);
             BtnSeend.Name = "BtnSeend";
             BtnSeend.Size = new Size(120, 28);
             BtnSeend.TabIndex = 25;
@@ -388,37 +382,10 @@
             FromPlotGenre.Size = new Size(679, 193);
             FromPlotGenre.TabIndex = 20;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(16, 59);
-            label1.Name = "label1";
-            label1.Size = new Size(91, 15);
-            label1.TabIndex = 16;
-            label1.Text = "Tipo de Archivo";
-            // 
-            // ComBoxTypeExport
-            // 
-            ComBoxTypeExport.FormattingEnabled = true;
-            ComBoxTypeExport.Items.AddRange(new object[] { "CSV", "TXT", "XML", "JSON" });
-            ComBoxTypeExport.Location = new Point(119, 56);
-            ComBoxTypeExport.Name = "ComBoxTypeExport";
-            ComBoxTypeExport.Size = new Size(133, 23);
-            ComBoxTypeExport.TabIndex = 15;
-            // 
-            // BtnExport
-            // 
-            BtnExport.Location = new Point(266, 55);
-            BtnExport.Name = "BtnExport";
-            BtnExport.Size = new Size(120, 22);
-            BtnExport.TabIndex = 14;
-            BtnExport.Text = "Exportar";
-            BtnExport.UseVisualStyleBackColor = true;
-            // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(16, 17);
+            label6.Location = new Point(34, 45);
             label6.Name = "label6";
             label6.Size = new Size(52, 15);
             label6.TabIndex = 13;
@@ -428,7 +395,7 @@
             // 
             ComBoxFormat_Ver.FormattingEnabled = true;
             ComBoxFormat_Ver.Items.AddRange(new object[] { "CSV", "TXT", "XML", "JSON" });
-            ComBoxFormat_Ver.Location = new Point(119, 17);
+            ComBoxFormat_Ver.Location = new Point(121, 40);
             ComBoxFormat_Ver.Name = "ComBoxFormat_Ver";
             ComBoxFormat_Ver.Size = new Size(133, 23);
             ComBoxFormat_Ver.TabIndex = 12;
@@ -491,7 +458,7 @@
             // 
             // BtnSave
             // 
-            BtnSave.Location = new Point(266, 18);
+            BtnSave.Location = new Point(268, 41);
             BtnSave.Name = "BtnSave";
             BtnSave.Size = new Size(120, 22);
             BtnSave.TabIndex = 2;
@@ -627,9 +594,6 @@
         private Label label6;
         private ComboBox ComBoxFormat_Ver;
         private Button BtnDelet;
-        private Label label1;
-        private ComboBox ComBoxTypeExport;
-        private Button BtnExport;
         private DataGridView DataGrideShowSql;
         private Button BtnUpload;
         private Label label11;

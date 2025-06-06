@@ -293,7 +293,7 @@ namespace GameDataHub
         private void BtnSave_Click(object sender, EventArgs e)
         {
             //if the datagridview is empty, show a message
-            if (DataGrideShowData.Rows.Count <= 1)
+            if (DataGrideViewShowData.Rows.Count <= 1)
             {
                 MessageBox.Show("No hay datos para guardar.");
                 return;
@@ -489,10 +489,6 @@ namespace GameDataHub
 
         }
 
-        private void TxtFilter_TextChanged(object sender, EventArgs e)
-        {
-
-        }
         private void BtnSeend_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
@@ -1144,7 +1140,10 @@ namespace GameDataHub
             TreeViewSql.ExpandAll();
         }
 
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 
 }
