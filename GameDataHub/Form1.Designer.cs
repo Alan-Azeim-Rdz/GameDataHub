@@ -30,6 +30,8 @@
         {
             TabControlOption = new TabControl();
             TabPageArchive = new TabPage();
+            BtnFillTreeView = new Button();
+            TreeViewSql = new TreeView();
             BtnDelet = new Button();
             label5 = new Label();
             label4 = new Label();
@@ -73,12 +75,10 @@
             BtnSave = new Button();
             BtnLoad = new Button();
             TabPageSQL = new TabPage();
-            TreeViewSql = new TreeView();
             BtnSend = new Button();
             BtnReceive = new Button();
             BtnUpload = new Button();
             DataGrideShowSql = new DataGridView();
-            BtnFillTreeView = new Button();
             TabControlOption.SuspendLayout();
             TabPageArchive.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)PictureBoxGameIcon).BeginInit();
@@ -104,6 +104,8 @@
             // 
             // TabPageArchive
             // 
+            TabPageArchive.Controls.Add(BtnFillTreeView);
+            TabPageArchive.Controls.Add(TreeViewSql);
             TabPageArchive.Controls.Add(BtnDelet);
             TabPageArchive.Controls.Add(label5);
             TabPageArchive.Controls.Add(label4);
@@ -123,6 +125,24 @@
             TabPageArchive.TabIndex = 0;
             TabPageArchive.Text = "Archivo";
             TabPageArchive.UseVisualStyleBackColor = true;
+            // 
+            // BtnFillTreeView
+            // 
+            BtnFillTreeView.Location = new Point(13, 221);
+            BtnFillTreeView.Margin = new Padding(3, 2, 3, 2);
+            BtnFillTreeView.Name = "BtnFillTreeView";
+            BtnFillTreeView.Size = new Size(115, 35);
+            BtnFillTreeView.TabIndex = 22;
+            BtnFillTreeView.Text = "Graficar Arbol";
+            BtnFillTreeView.UseVisualStyleBackColor = true;
+            BtnFillTreeView.Click += BtnFillTreeView_Click;
+            // 
+            // TreeViewSql
+            // 
+            TreeViewSql.Location = new Point(13, 285);
+            TreeViewSql.Name = "TreeViewSql";
+            TreeViewSql.Size = new Size(304, 267);
+            TreeViewSql.TabIndex = 21;
             // 
             // BtnDelet
             // 
@@ -175,7 +195,7 @@
             // 
             // PictureBoxGameIcon
             // 
-            PictureBoxGameIcon.Location = new Point(67, 207);
+            PictureBoxGameIcon.Location = new Point(352, 263);
             PictureBoxGameIcon.Margin = new Padding(3, 2, 3, 2);
             PictureBoxGameIcon.Name = "PictureBoxGameIcon";
             PictureBoxGameIcon.Size = new Size(330, 289);
@@ -186,7 +206,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(188, 182);
+            label3.Location = new Point(501, 221);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 7;
@@ -316,7 +336,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(16, 125);
+            label7.Location = new Point(16, 132);
             label7.Name = "label7";
             label7.Size = new Size(43, 15);
             label7.TabIndex = 27;
@@ -324,7 +344,7 @@
             // 
             // TextBoxUser
             // 
-            TextBoxUser.Location = new Point(100, 122);
+            TextBoxUser.Location = new Point(103, 129);
             TextBoxUser.Name = "TextBoxUser";
             TextBoxUser.Size = new Size(180, 23);
             TextBoxUser.TabIndex = 26;
@@ -341,7 +361,7 @@
             // 
             // TxtFilter
             // 
-            TxtFilter.Location = new Point(100, 95);
+            TxtFilter.Location = new Point(103, 100);
             TxtFilter.Name = "TxtFilter";
             TxtFilter.Size = new Size(180, 23);
             TxtFilter.TabIndex = 24;
@@ -387,9 +407,9 @@
             label9.AutoSize = true;
             label9.Location = new Point(16, 103);
             label9.Name = "label9";
-            label9.Size = new Size(34, 15);
+            label9.Size = new Size(81, 15);
             label9.TabIndex = 19;
-            label9.Text = "Filtro";
+            label9.Text = "Filtro Nombre";
             // 
             // button2
             // 
@@ -523,8 +543,6 @@
             // 
             // TabPageSQL
             // 
-            TabPageSQL.Controls.Add(BtnFillTreeView);
-            TabPageSQL.Controls.Add(TreeViewSql);
             TabPageSQL.Controls.Add(BtnSend);
             TabPageSQL.Controls.Add(BtnReceive);
             TabPageSQL.Controls.Add(BtnUpload);
@@ -537,13 +555,6 @@
             TabPageSQL.TabIndex = 2;
             TabPageSQL.Text = "SQL";
             TabPageSQL.UseVisualStyleBackColor = true;
-            // 
-            // TreeViewSql
-            // 
-            TreeViewSql.Location = new Point(6, 237);
-            TreeViewSql.Name = "TreeViewSql";
-            TreeViewSql.Size = new Size(423, 399);
-            TreeViewSql.TabIndex = 19;
             // 
             // BtnSend
             // 
@@ -591,17 +602,6 @@
             DataGrideShowSql.SelectionMode = DataGridViewSelectionMode.CellSelect;
             DataGrideShowSql.Size = new Size(1035, 640);
             DataGrideShowSql.TabIndex = 5;
-            // 
-            // BtnFillTreeView
-            // 
-            BtnFillTreeView.Location = new Point(74, 103);
-            BtnFillTreeView.Margin = new Padding(3, 2, 3, 2);
-            BtnFillTreeView.Name = "BtnFillTreeView";
-            BtnFillTreeView.Size = new Size(115, 35);
-            BtnFillTreeView.TabIndex = 20;
-            BtnFillTreeView.Text = "Graficar Arbol";
-            BtnFillTreeView.UseVisualStyleBackColor = true;
-            BtnFillTreeView.Click += BtnFillTreeView_Click;
             // 
             // Form1
             // 
@@ -670,7 +670,6 @@
         private ScottPlot.WinForms.FormsPlot FromPlotGenre;
         private Label label9;
         private Button button2;
-        private TreeView TreeViewSql;
         private Button BtnSend;
         private Button BtnReceive;
         private TextBox TxtFilter;
@@ -678,5 +677,6 @@
         private TextBox TextBoxUser;
         private Button BtnSeend;
         private Button BtnFillTreeView;
+        private TreeView TreeViewSql;
     }
 }

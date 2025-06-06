@@ -23,7 +23,6 @@ namespace GameDataHub
         private string accessToken;
         private string clientSecret = "0iptgu744ucm2s3fi2g8dnehnuiktr";
         private DateTime tokenExpiration;
-        List<Game> listaOriginal = new List<Game>();
 
         public Form1()
         {
@@ -460,16 +459,16 @@ namespace GameDataHub
                         switch (fileExtension)
                         {
                             case ".csv":
-                                LoadCsv(filePath, DataGrideShowData);
+                                LoadCsv(filePath, DataGrideViewShowData);
                                 break;
                             case ".txt":
-                                LoadTxt(filePath, DataGrideShowData);
+                                LoadTxt(filePath, DataGrideViewShowData);
                                 break;
                             case ".xml":
-                                LoadXml(filePath, DataGrideShowData);
+                                LoadXml(filePath, DataGrideViewShowData);
                                 break;
                             case ".json":
-                                LoadJson(filePath, DataGrideShowData);
+                                LoadJson(filePath, DataGrideViewShowData);
                                 break;
                             default:
                                 MessageBox.Show("Formato de archivo no soportado.");
@@ -1116,13 +1115,13 @@ namespace GameDataHub
             TreeViewSql.Nodes.Clear();
 
             // Índices de las columnas que usarás (ajusta según tu DataGridView)
-            int genreColIndex = DataGrideShowSql.Columns["genre"]?.Index ?? 2;  // ejemplo
-            int nameColIndex = DataGrideShowSql.Columns["name"]?.Index ?? 1;
+            int genreColIndex = DataGrideShowData.Columns["genre"]?.Index ?? 2;  // ejemplo
+            int nameColIndex = DataGrideShowData.Columns["name"]?.Index ?? 1;
 
             // Diccionario para evitar duplicados de géneros
             Dictionary<string, TreeNode> genreNodes = new Dictionary<string, TreeNode>();
 
-            foreach (DataGridViewRow row in DataGrideShowSql.Rows)
+            foreach (DataGridViewRow row in DataGrideShowData.Rows)
             {
                 if (row.IsNewRow) continue;
 
@@ -1144,6 +1143,8 @@ namespace GameDataHub
 
             TreeViewSql.ExpandAll();
         }
+
+
     }
 
 }
