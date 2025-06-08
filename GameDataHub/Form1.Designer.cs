@@ -50,6 +50,9 @@
             label2 = new Label();
             TextBoxName = new TextBox();
             TabPageView = new TabPage();
+            TxtFilter = new TextBox();
+            label1 = new Label();
+            ComBoxFiltrer = new ComboBox();
             label7 = new Label();
             TextBoxUser = new TextBox();
             BtnSeend = new Button();
@@ -152,7 +155,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(168, 105);
+            label5.Location = new Point(168, 78);
             label5.Name = "label5";
             label5.Size = new Size(82, 15);
             label5.TabIndex = 12;
@@ -161,7 +164,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(12, 142);
+            label4.Location = new Point(12, 115);
             label4.Name = "label4";
             label4.Size = new Size(52, 15);
             label4.TabIndex = 11;
@@ -170,15 +173,15 @@
             // ComBoxFormat
             // 
             ComBoxFormat.FormattingEnabled = true;
-            ComBoxFormat.Items.AddRange(new object[] { "CSV", "TXT", "XML", "JSON" });
-            ComBoxFormat.Location = new Point(74, 140);
+            ComBoxFormat.Items.AddRange(new object[] { "CSV", "TXT", "XML", "JSON", "PDF" });
+            ComBoxFormat.Location = new Point(74, 113);
             ComBoxFormat.Name = "ComBoxFormat";
             ComBoxFormat.Size = new Size(133, 23);
             ComBoxFormat.TabIndex = 10;
             // 
             // BtnSaveData
             // 
-            BtnSaveData.Location = new Point(262, 134);
+            BtnSaveData.Location = new Point(262, 107);
             BtnSaveData.Margin = new Padding(3, 2, 3, 2);
             BtnSaveData.Name = "BtnSaveData";
             BtnSaveData.Size = new Size(94, 31);
@@ -300,6 +303,9 @@
             // 
             // TabPageView
             // 
+            TabPageView.Controls.Add(TxtFilter);
+            TabPageView.Controls.Add(label1);
+            TabPageView.Controls.Add(ComBoxFiltrer);
             TabPageView.Controls.Add(label7);
             TabPageView.Controls.Add(TextBoxUser);
             TabPageView.Controls.Add(BtnSeend);
@@ -321,10 +327,38 @@
             TabPageView.Text = "Ver";
             TabPageView.UseVisualStyleBackColor = true;
             // 
+            // TxtFilter
+            // 
+            TxtFilter.Location = new Point(63, 109);
+            TxtFilter.Margin = new Padding(3, 2, 3, 2);
+            TxtFilter.Name = "TxtFilter";
+            TxtFilter.Size = new Size(200, 23);
+            TxtFilter.TabIndex = 30;
+            TxtFilter.TextChanged += TxtFilter_TextChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(10, 109);
+            label1.Name = "label1";
+            label1.Size = new Size(47, 15);
+            label1.TabIndex = 29;
+            label1.Text = "Filtrado";
+            // 
+            // ComBoxFiltrer
+            // 
+            ComBoxFiltrer.FormattingEnabled = true;
+            ComBoxFiltrer.Items.AddRange(new object[] { "ID", "Nombre", "Genero", "Desarrolladora", "Plataforma" });
+            ComBoxFiltrer.Location = new Point(282, 109);
+            ComBoxFiltrer.Name = "ComBoxFiltrer";
+            ComBoxFiltrer.Size = new Size(133, 23);
+            ComBoxFiltrer.TabIndex = 28;
+            ComBoxFiltrer.SelectedIndexChanged += ComBoxFiltrer_SelectedIndexChanged;
+            // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(16, 132);
+            label7.Location = new Point(10, 79);
             label7.Name = "label7";
             label7.Size = new Size(43, 15);
             label7.TabIndex = 27;
@@ -332,14 +366,14 @@
             // 
             // TextBoxUser
             // 
-            TextBoxUser.Location = new Point(74, 129);
+            TextBoxUser.Location = new Point(59, 76);
             TextBoxUser.Name = "TextBoxUser";
             TextBoxUser.Size = new Size(180, 23);
             TextBoxUser.TabIndex = 26;
             // 
             // BtnSeend
             // 
-            BtnSeend.Location = new Point(284, 125);
+            BtnSeend.Location = new Point(245, 72);
             BtnSeend.Name = "BtnSeend";
             BtnSeend.Size = new Size(120, 28);
             BtnSeend.TabIndex = 25;
@@ -385,7 +419,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(34, 45);
+            label6.Location = new Point(35, 22);
             label6.Name = "label6";
             label6.Size = new Size(52, 15);
             label6.TabIndex = 13;
@@ -395,7 +429,7 @@
             // 
             ComBoxFormat_Ver.FormattingEnabled = true;
             ComBoxFormat_Ver.Items.AddRange(new object[] { "CSV", "TXT", "XML", "JSON" });
-            ComBoxFormat_Ver.Location = new Point(121, 40);
+            ComBoxFormat_Ver.Location = new Point(93, 18);
             ComBoxFormat_Ver.Name = "ComBoxFormat_Ver";
             ComBoxFormat_Ver.Size = new Size(133, 23);
             ComBoxFormat_Ver.TabIndex = 12;
@@ -458,7 +492,7 @@
             // 
             // BtnSave
             // 
-            BtnSave.Location = new Point(268, 41);
+            BtnSave.Location = new Point(245, 17);
             BtnSave.Name = "BtnSave";
             BtnSave.Size = new Size(120, 22);
             BtnSave.TabIndex = 2;
@@ -607,5 +641,8 @@
         private Button BtnSeend;
         private Button BtnFillTreeView;
         private TreeView TreeViewSql;
+        private TextBox TxtFilter;
+        private Label label1;
+        private ComboBox ComBoxFiltrer;
     }
 }

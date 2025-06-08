@@ -272,6 +272,33 @@ namespace GameDataHub
                             }
                         }
                         break;
+                    case "PDF":
+                        // Guardar el contenido del DataGridView en un archivo PDF
+                        if (DataGrideViewShowData.Rows.Count <= 0)
+                        {
+                            MessageBox.Show("No hay datos para guardar.");
+                            return;
+                        }
+
+                        using (SaveFileDialog saveDialog = new SaveFileDialog())
+                        {
+                            saveDialog.Filter = "PDF files (*.pdf)|*.pdf";
+                            saveDialog.FileName = "Exportado";
+
+                            if (saveDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                try
+                                {
+                                    ExportarDataGridViewAPDF(DataGrideShowData, saveDialog.FileName);
+                                    MessageBox.Show("PDF guardado correctamente.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Error al guardar el PDF: " + ex.Message);
+                                }
+                            }
+                        }
+                        break;
 
                     default:
                         MessageBox.Show("Selecciona un formato válido para guardar los datos.");
@@ -456,6 +483,10 @@ namespace GameDataHub
                     {
                         string filePath = openFileDialog.FileName;
                         string fileExtension = Path.GetExtension(filePath).ToLower();
+
+                        // Limpiar columnas antes de cargar nuevo archivo
+                        DataGrideViewShowData.Columns.Clear();
+
                         switch (fileExtension)
                         {
                             case ".csv":
@@ -472,7 +503,22 @@ namespace GameDataHub
                                 break;
                             default:
                                 MessageBox.Show("Formato de archivo no soportado.");
-                                break;
+                                return;
+                        }
+
+                        if (DataGrideViewShowData.Rows.Count > 0)
+                        {
+                            // Graficar por género (columna 2)
+                            var datosAgrupados = ObtenerFrecuenciasDeColumna(DataGrideViewShowData, 2);
+                            GraficarPieScottPlot5(FromPlotGenre, datosAgrupados);
+
+                            // Graficar por plataforma (columna 4)
+                            datosAgrupados = ObtenerFrecuenciasDeColumna(DataGrideViewShowData, 4);
+                            GraficarPieScottPlot5(FomPlotPlatform, datosAgrupados);
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se encontraron datos para graficar.");
                         }
                     }
                     catch (Exception ex)
@@ -481,32 +527,86 @@ namespace GameDataHub
                     }
                 }
             }
-            var datosAgrupados = ObtenerFrecuenciasDeColumna(DataGrideViewShowData, 2);
-            GraficarPieScottPlot5(FromPlotGenre, datosAgrupados);
-
-            datosAgrupados = ObtenerFrecuenciasDeColumna(DataGrideViewShowData, 4);
-            GraficarPieScottPlot5(FomPlotPlatform, datosAgrupados);
 
         }
 
         private void BtnSeend_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.Filter = "PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv|Texto (*.txt)|*.txt";
-            saveDialog.FileName = "Exportado";
-
-            if (saveDialog.ShowDialog() == DialogResult.OK)
+            saveDialog.Filter = "PDF (*.pdf)|*.pdf|CSV (*.csv)|*.csv|Texto (*.txt)|*.txt|JSON (*.json)|*.json|XML (*.xml)|*.xml";
+            try
             {
-                string extension = Path.GetExtension(saveDialog.FileName).ToLower();
-
-                if (extension == ".pdf")
+                saveDialog.FileName = "Tabla de juegos";
+                try
                 {
-                    ExportarDataGridViewAPDF(saveDialog.FileName); // Usa tu método PrintDocument con PDF
+                    if (saveDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string extension = Path.GetExtension(saveDialog.FileName).ToLower();
+
+                        try
+                        {
+                            switch (extension)
+                            {
+                                case ".pdf":
+                                    if (DataGrideViewShowData.Rows.Count <= 1)
+                                    {
+                                        MessageBox.Show("No hay datos para exportar.");
+                                        return;
+                                    }
+
+                                    string tempPath = Path.Combine(Path.GetTempPath(), "Exportado.pdf");
+
+                                    try
+                                    {
+                                        ExportarDataGridViewAPDF(DataGrideViewShowData, tempPath);
+                                        EnviarArchivoPorCorreo(tempPath, "Exportado.pdf");
+                                        MessageBox.Show("PDF enviado por correo.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show("Error al generar o enviar el PDF: " + ex.Message);
+                                    }
+                                    break;
+                                case ".csv":
+                                    ExportarDataGridViewACSV(saveDialog.FileName);
+                                    break;
+                                case ".txt":
+                                    ExportarDataGridViewATxt(saveDialog.FileName);
+                                    break;
+                                case ".json":
+                                    ExportarDataGridViewAJson(saveDialog.FileName);
+                                    break;
+                                case ".xml":
+                                    ExportarDataGridViewAXml(saveDialog.FileName);
+                                    break;
+                                default:
+                                    MessageBox.Show("Formato no soportado.");
+                                    return;
+                            }
+
+                            EnviarArchivoPorCorreo(saveDialog.FileName, Path.GetFileName(saveDialog.FileName));
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error al exportar el archivo: " + ex.Message);
+                            return;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al enviar el archivo: " + ex.Message);
+                    return;
                 }
 
-                // Enviar por correo
-                EnviarArchivoPorCorreo(saveDialog.FileName, Path.GetFileName(saveDialog.FileName));
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al establecer el nombre del archivo: " + ex.Message);
+                return;
+            }
+
+
 
         }
 
@@ -726,6 +826,15 @@ namespace GameDataHub
                 {
                     var values = ParseCsvLine(line); // Este método debe dividir por ',' y considerar comillas si hay
 
+                    // Reemplazar celdas vacías o con solo espacios por "n/a"
+                    for (int i = 0; i < values.Count; i++)
+                    {
+                        if (string.IsNullOrWhiteSpace(values[i]))
+                        {
+                            values[i] = "n/a";
+                        }
+                    }
+
                     if (isFirstLine)
                     {
                         headers = values;
@@ -778,7 +887,16 @@ namespace GameDataHub
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var values = ParseCsvLine(line); // Puedes adaptar esto para tabulaciones si es necesario
+                    var values = ParseCsvLine(line); // Asegúrate de adaptar ParseCsvLine si usas tabulaciones en vez de comas
+
+                    // Reemplazar valores vacíos o con solo espacios por "n/a"
+                    for (int i = 0; i < values.Count; i++)
+                    {
+                        if (string.IsNullOrWhiteSpace(values[i]))
+                        {
+                            values[i] = "n/a";
+                        }
+                    }
 
                     if (isFirstLine)
                     {
@@ -800,7 +918,7 @@ namespace GameDataHub
                     {
                         int rowIndex = dataGridView.Rows.Add(values.ToArray());
 
-                        // Si quieres vincular el objeto Game como Tag
+                        // Vincular el objeto Game como Tag (si se requiere)
                         var game = new Games
                         {
                             id = values[0],
@@ -816,6 +934,7 @@ namespace GameDataHub
                 }
             }
         }
+
 
 
 
@@ -841,27 +960,33 @@ namespace GameDataHub
 
             foreach (var gameElement in gameElements)
             {
+                // Obtener valores con "n/a" si están vacíos
                 var values = dataGridView.Columns
                     .Cast<DataGridViewColumn>()
-                    .Select(col => gameElement.Element(col.Name)?.Value ?? "")
+                    .Select(col =>
+                    {
+                        string value = gameElement.Element(col.Name)?.Value ?? "";
+                        return string.IsNullOrWhiteSpace(value) ? "n/a" : value;
+                    })
                     .ToArray();
 
                 int rowIndex = dataGridView.Rows.Add(values);
 
-                // Si deseas asociar un objeto Game
+                // Asociar objeto Game, usando también "n/a" para campos vacíos
                 var game = new Games
                 {
-                    id = gameElement.Element("id")?.Value,
-                    name = gameElement.Element("name")?.Value,
-                    genre = gameElement.Element("genre")?.Value,
-                    developer = gameElement.Element("developer")?.Value,
-                    platform = gameElement.Element("platform")?.Value,
-                    imageUrl = gameElement.Element("imageUrl")?.Value
+                    id = string.IsNullOrWhiteSpace(gameElement.Element("id")?.Value) ? "n/a" : gameElement.Element("id")?.Value,
+                    name = string.IsNullOrWhiteSpace(gameElement.Element("name")?.Value) ? "n/a" : gameElement.Element("name")?.Value,
+                    genre = string.IsNullOrWhiteSpace(gameElement.Element("genre")?.Value) ? "n/a" : gameElement.Element("genre")?.Value,
+                    developer = string.IsNullOrWhiteSpace(gameElement.Element("developer")?.Value) ? "n/a" : gameElement.Element("developer")?.Value,
+                    platform = string.IsNullOrWhiteSpace(gameElement.Element("platform")?.Value) ? "n/a" : gameElement.Element("platform")?.Value,
+                    imageUrl = string.IsNullOrWhiteSpace(gameElement.Element("imageUrl")?.Value) ? "n/a" : gameElement.Element("imageUrl")?.Value
                 };
 
                 dataGridView.Rows[rowIndex].Tag = game;
             }
         }
+
 
 
         public void LoadJson(string filePath, DataGridView dataGridView)
@@ -886,27 +1011,33 @@ namespace GameDataHub
             foreach (var item in juegos)
             {
                 List<string> rowData = new List<string>();
+
                 foreach (DataGridViewColumn col in dataGridView.Columns)
                 {
-                    rowData.Add(item[col.Name]?.ToString() ?? "");
+                    string value = item[col.Name]?.ToString() ?? "";
+                    rowData.Add(string.IsNullOrWhiteSpace(value) ? "n/a" : value);
                 }
 
                 int rowIndex = dataGridView.Rows.Add(rowData.ToArray());
 
-                // Opción: vincular al objeto Game si aplica
+                // Asignar al objeto Game con validación de campos vacíos
+                string GetSafeValue(string key) =>
+                    string.IsNullOrWhiteSpace(item[key]?.ToString()) ? "n/a" : item[key]?.ToString();
+
                 var game = new Games
                 {
-                    id = item["id"]?.ToString(),
-                    name = item["name"]?.ToString(),
-                    genre = item["genre"]?.ToString(),
-                    developer = item["developer"]?.ToString(),
-                    platform = item["platform"]?.ToString(),
-                    imageUrl = item["imageUrl"]?.ToString()
+                    id = GetSafeValue("id"),
+                    name = GetSafeValue("name"),
+                    genre = GetSafeValue("genre"),
+                    developer = GetSafeValue("developer"),
+                    platform = GetSafeValue("platform"),
+                    imageUrl = GetSafeValue("imageUrl")
                 };
 
                 dataGridView.Rows[rowIndex].Tag = game;
             }
         }
+
 
         private List<string> ParseCsvLine(string line)
         {
@@ -1051,11 +1182,10 @@ namespace GameDataHub
             }
         }
 
-        private void ExportarDataGridViewAPDF(string rutaArchivo)
+        private void ExportarDataGridViewAPDF(DataGridView gridView, string rutaArchivo)
         {
             PrintDocument pd = new PrintDocument();
 
-            // Configura impresión a archivo PDF con Microsoft Print to PDF
             pd.PrinterSettings.PrinterName = "Microsoft Print to PDF";
             pd.PrinterSettings.PrintToFile = true;
             pd.PrinterSettings.PrintFileName = rutaArchivo;
@@ -1070,40 +1200,172 @@ namespace GameDataHub
                 Pen pen = Pens.Black;
                 Brush brush = Brushes.Black;
 
-                int totalColumnas = DataGrideViewShowData.Columns.Count;
-                int totalFilas = DataGrideViewShowData.Rows.Count - 1; // Omitir última fila
+                int totalColumnas = gridView.Columns.Count;
+                int totalFilas = gridView.Rows.Count - 1; // Omitir última fila vacía
 
-                // Dibuja encabezados con rectángulos
+                // Dibujar encabezados
                 for (int col = 0; col < totalColumnas; col++)
                 {
                     Rectangle rect = new Rectangle(x, y, anchoColumna, altoFila);
                     ev.Graphics.DrawRectangle(pen, rect);
-                    ev.Graphics.DrawString(DataGrideViewShowData.Columns[col].HeaderText, font, brush, rect,
-                        new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+                    ev.Graphics.DrawString(gridView.Columns[col].HeaderText, font, brush, rect,
+                        new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
                     x += anchoColumna;
                 }
 
                 y += altoFila;
                 x = 20;
 
-                // Dibuja filas de datos con rectángulos
+                // Dibujar filas
                 for (int fila = 0; fila < totalFilas; fila++)
                 {
                     for (int col = 0; col < totalColumnas; col++)
                     {
                         Rectangle rect = new Rectangle(x, y, anchoColumna, altoFila);
                         ev.Graphics.DrawRectangle(pen, rect);
-                        string texto = DataGrideViewShowData.Rows[fila].Cells[col].Value?.ToString() ?? "";
+                        string texto = gridView.Rows[fila].Cells[col].Value?.ToString() ?? "n/a";
                         ev.Graphics.DrawString(texto, font, brush, rect,
-                            new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+                            new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
                         x += anchoColumna;
                     }
                     y += altoFila;
                     x = 20;
+
+                    if (y + altoFila > ev.MarginBounds.Bottom)
+                    {
+                        ev.HasMorePages = true;
+                        return;
+                    }
                 }
+
+                ev.HasMorePages = false;
             };
 
-            pd.Print();
+            try
+            {
+                pd.Print();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al imprimir como PDF: " + ex.Message);
+            }
+        }
+
+
+        private void ExportarDataGridViewAJson(string filePath)
+        {
+            JArray array = new JArray();
+
+            foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                JObject obj = new JObject();
+                foreach (DataGridViewColumn col in DataGrideViewShowData.Columns)
+                {
+                    string key = col.HeaderText;
+                    string value = row.Cells[col.Index].Value?.ToString() ?? "";
+                    obj[key] = string.IsNullOrWhiteSpace(value) ? "n/a" : value;
+                }
+
+                array.Add(obj);
+            }
+
+            File.WriteAllText(filePath, array.ToString());
+        }
+
+        private void ExportarDataGridViewAXml(string filePath)
+        {
+            XElement root = new XElement("Games");
+
+            foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                XElement game = new XElement("Game");
+
+                foreach (DataGridViewColumn col in DataGrideViewShowData.Columns)
+                {
+                    string key = col.HeaderText;
+                    string value = row.Cells[col.Index].Value?.ToString() ?? "n/a";
+                    game.Add(new XElement(key, string.IsNullOrWhiteSpace(value) ? "n/a" : value));
+                }
+
+                root.Add(game);
+            }
+
+            root.Save(filePath);
+        }
+
+        private void ExportarDataGridViewATxt(string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                // Encabezados
+                var headers = DataGrideViewShowData.Columns
+                    .Cast<DataGridViewColumn>()
+                    .Select(col => col.HeaderText);
+                writer.WriteLine(string.Join("\t", headers)); // Usa tabulación
+
+                // Filas
+                foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        var values = row.Cells
+                            .Cast<DataGridViewCell>()
+                            .Select(cell => cell.Value?.ToString() ?? "");
+                        writer.WriteLine(string.Join("\t", values));
+                    }
+                }
+            }
+        }
+
+        private void ExportarDataGridViewACSV(string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                // Encabezados
+                var headers = DataGrideViewShowData.Columns
+                    .Cast<DataGridViewColumn>()
+                    .Select(col => col.HeaderText);
+                writer.WriteLine(string.Join(",", headers));
+
+                // Filas
+                foreach (DataGridViewRow row in DataGrideViewShowData.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        var values = row.Cells
+                            .Cast<DataGridViewCell>()
+                            .Select(cell => "\"" + (cell.Value?.ToString() ?? "") + "\"");
+                        writer.WriteLine(string.Join(",", values));
+                    }
+                }
+            }
+        }
+        private void AplicarFiltro(DataGridView dgv)
+        {
+            string texto = TxtFilter.Text.Trim();
+            int columna = ComBoxFiltrer.SelectedIndex;               // 0?based
+
+            // Si la caja está vacía, muestra todo
+            if (string.IsNullOrEmpty(texto))
+            {
+                foreach (DataGridViewRow fila in dgv.Rows)
+                    fila.Visible = true;
+                return;
+            }
+
+            foreach (DataGridViewRow fila in dgv.Rows)
+            {
+                if (fila.IsNewRow) continue;                 // omite fila de edición
+                string valorCelda = fila.Cells[columna].Value?.ToString() ?? "";
+
+                // Visible solo si contiene el texto (ignora mayúsc/minúsc)
+                fila.Visible = valorCelda.IndexOf(
+                    texto, StringComparison.OrdinalIgnoreCase) >= 0;
+            }
         }
 
         private void BtnFillTreeView_Click(object sender, EventArgs e)
@@ -1140,10 +1402,16 @@ namespace GameDataHub
             TreeViewSql.ExpandAll();
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void TxtFilter_TextChanged(object sender, EventArgs e)
         {
-
+            AplicarFiltro(DataGrideViewShowData);
         }
+
+        private void ComBoxFiltrer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AplicarFiltro(DataGrideViewShowData);
+        }
+
     }
 
 }
